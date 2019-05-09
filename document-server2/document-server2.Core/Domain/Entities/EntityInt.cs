@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace document_server2.Core.Domain.Entities
 {
-    public abstract class Entity
+    public abstract class EntityInt
     {
         [Key]
         [Column(TypeName = "int")]

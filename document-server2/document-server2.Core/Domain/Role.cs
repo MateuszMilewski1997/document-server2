@@ -1,9 +1,16 @@
-﻿using document_server2.Core.Domain.Entities;
-
-namespace document_server2.Core.Domain
+﻿namespace document_server2.Core.Domain
 {
-    public class Role : Entity
+    public class Role
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
+        public bool Add_documents { get; private set; }
+        public bool Add_comments { get; private set; }
+        public bool Change_status { get; private set; }
+        public bool Add_users { get; private set; }
+
+        protected Role()
+        {
+
+        }
     }
 }

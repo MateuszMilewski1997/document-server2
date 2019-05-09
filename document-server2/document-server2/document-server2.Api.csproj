@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\document-server2.Core\document-server2.Core.csproj" />
+    <ProjectReference Include="..\document-server2.Infrastructure\document-server2.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
