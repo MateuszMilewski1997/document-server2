@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace document_server2.Core.Domain.Context
 {
@@ -74,7 +75,7 @@ namespace document_server2.Core.Domain.Context
                       .IsRequired(true);
             });
 
-            modelBuilder.Entity<Document>(column =>
+            modelBuilder.Entity<doc>(column =>
             {
                 column.Property(name => name.Case_id)
                       .HasColumnType("int")
@@ -109,6 +110,7 @@ namespace document_server2.Core.Domain.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Case> Cases { get; set; }
-        public DbSet<Document> Documents { get; set; }
+        public DbSet<doc> Documents { get; set; }
+        public IEnumerable<object> Case { get; set; }
     }
 }

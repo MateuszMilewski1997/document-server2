@@ -106,7 +106,7 @@ namespace document_server2.Infrastructure.Services
 
             if (user != null)
             {
-                Case new_case = new Case(email, @case.Type, @case.Description, _mapper.Map<IEnumerable<Document>>(@case.Documents));
+                Case new_case = new Case(email, @case.Type, @case.Description, _mapper.Map<IEnumerable<doc>>(@case.Documents));
                 user.AddCase(new_case);
                 await _userRepository.UpdateAsync(user);
             }

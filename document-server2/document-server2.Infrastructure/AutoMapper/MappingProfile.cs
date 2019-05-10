@@ -11,10 +11,10 @@ namespace document_server2.Infrastructure.AutoMapper
         public MappingProfile()
         {
             CreateMap<User, UserDTO>();
-            CreateMap<Document, DocumentDTO>();
+            CreateMap<doc, DocumentDTO>();
             CreateMap<Case, CaseDTO>();
             CreateMap<Case, CaseDetailsDTO>();
-            CreateMap<SendDocument, Document>();
+            CreateMap<SendDocument, doc>();
         }
     }
 }
