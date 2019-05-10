@@ -19,7 +19,7 @@ namespace document_server2.Core.Domain
         {
 
         }
-        public Case(string user_email, string type, string description)
+        public Case(string user_email, string type, string description, IEnumerable<Document> documents)
         {
             User_email = user_email;
             Type = type;
@@ -27,6 +27,11 @@ namespace document_server2.Core.Domain
             Description = description;
             Comment = string.Empty;
             Status = "not considered";
+
+            foreach (Document document in documents)
+            {
+                _documents.Add(new Document(document.Name, document.Url));
+            }
         }
     }
 }

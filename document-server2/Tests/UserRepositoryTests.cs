@@ -19,7 +19,7 @@ namespace Tests
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
             DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "test", "secret", "user");
+            User user = new User("test@test.com", "tester", "secret", "user");
             UserRepository userRepository = new UserRepository(context);
             // Act
             var new_user = await userRepository.GetByEmailAsync(user.Email);
@@ -35,7 +35,7 @@ namespace Tests
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
             DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "test", "secret", "user");
+            User user = new User("test@test.com", "tester", "secret", "user");
             UserRepository userRepository = new UserRepository(context);
             // Act
             context.Users.Add(user);
@@ -54,7 +54,7 @@ namespace Tests
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
             DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "test", "secret", "user");
+            User user = new User("test@test.com", "tester", "secret", "user");
             UserRepository userRepository = new UserRepository(context);
             // Act
             await userRepository.AddAsync(user);
@@ -71,7 +71,7 @@ namespace Tests
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
             DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "test", "secret", "user");
+            User user = new User("test@test.com", "tester", "secret", "user");
             UserRepository userRepository = new UserRepository(context);
             // Act
             await userRepository.AddAsync(user);
@@ -87,7 +87,7 @@ namespace Tests
                       .UseInMemoryDatabase(Guid.NewGuid().ToString())
                       .Options;
             DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "test", "secret", "user");
+            User user = new User("test@test.com", "tester", "secret", "user");
             UserRepository userRepository = new UserRepository(context);
             // Act
             context.Users.Add(user);
@@ -106,5 +106,22 @@ namespace Tests
             Assert.Equal("user2", user.Role_name);
             Assert.Equal("test2", user.Login);
         }
+
+        [Fact]
+        public async Task Niepoprawne_próba_rejestracji_Login_posiada_niedozowlony_znak_specjalny_i_zostanie_zwrócony_wyjątek()
+        {
+            // Arrange
+            DbContextOptions<DataBaseContext> options = new DbContextOptionsBuilder<DataBaseContext>()
+                      .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                      .Options;
+            DataBaseContext context = new DataBaseContext(options);
+            UserRepository userRepository = new UserRepository(context);
+            // Act
+            // Assert
+            Exception exception = await Assert.ThrowsAsync<Exception>(async () =>
+                await userRepository.AddAsync(new User("test@test.com", "tester#", "secret", "user")));
+            Assert.Equal("The login syntax is incorrect.", exception.Message);
+        }
+
     }
 }

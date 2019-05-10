@@ -24,10 +24,10 @@ namespace document_server2.Core.Domain.Context
                       .IsRequired(true);
                 column.Property(name => name.Login)
                       .HasColumnType("nvarchar(20)")
-                      .IsRequired(true);
+                      .IsRequired(false);
                 column.Property(name => name.Password)
                       .HasColumnType("nvarchar(20)")
-                      .IsRequired(true);
+                      .IsRequired(false);
                 column.Property(name => name.Role_name)
                       .HasColumnType("nvarchar(20)")
                       .IsRequired(true);

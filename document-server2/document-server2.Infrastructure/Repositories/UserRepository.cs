@@ -2,6 +2,8 @@
 using document_server2.Core.Domain.Context;
 using document_server2.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace document_server2.Infrastructure.Repositories
@@ -16,23 +18,37 @@ namespace document_server2.Infrastructure.Repositories
         }
 
         public async Task<User> GetByEmailAsync(string email)
-            => await _context.Users.SingleOrDefaultAsync(user => user.Email == email);
+            => await _context.Users
+            .Include(x => x.Cases)
+                .ThenInclude(x => x.Documents)
+            .Include(x => x.Role)
+            .SingleOrDefaultAsync(user => user.Email.Equals(email));
 
         public async Task<User> GetByLoginAsync(string login)
-            => await _context.Users.SingleOrDefaultAsync(user => user.Login == login);
+            => await _context.Users
+            .Include(x => x.Cases)
+                .ThenInclude(x => x.Documents)
+            .Include(x => x.Role)
+            .SingleOrDefaultAsync(user => user.Login.Equals(login));
 
-        public async Task AddAsync(User User)
+        public async Task AddAsync(User user)
         {
-            _context.Users.Add(User);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
             await Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(User User)
+        public async Task UpdateAsync(User user)
         {
-            _context.Users.Update(User);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
             await Task.CompletedTask;
         }
+
+        public async Task<Case> GetCaseAsync(int id)
+            => await _context.Cases.Include(x => x.Documents).SingleOrDefaultAsync(@case => @case.Id == id);
+
+        public async Task<IEnumerable<Case>> GetAllUserCaseAsync(string email)
+            => await _context.Cases.Where(@case => @case.User_email == email).ToListAsync();
     }
 }
