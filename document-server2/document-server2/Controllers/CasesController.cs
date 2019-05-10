@@ -1,4 +1,5 @@
 ﻿using document_server2.Controllers.BaseController;
+using document_server2.Core.Domain.Context;
 using document_server2.Infrastructure.Comends;
 using document_server2.Infrastructure.DTO;
 using document_server2.Infrastructure.Services;
@@ -12,9 +13,12 @@ namespace document_server2.Controllers
     public class CasesController : ApiControllerBase
     {
         private readonly IUserService _userService;
-        public CasesController(IUserService userService)
+        private readonly DataBaseContext _context;
+
+        public CasesController(IUserService userService, DataBaseContext context)
         {
             _userService = userService;
+            _context = context;
         }
 
         // GET: api/cases
@@ -46,6 +50,42 @@ namespace document_server2.Controllers
         {
             await _userService.AddCaseAsync(UserEmail, @case);
             return Created("/cases", null);
+        }
+
+
+        // Put: api/cases  //  spam  , not considered
+        [HttpPut("{id}/{spam}")]
+        [Authorize]
+        public async Task<ActionResult> Spam(int id, string spam )
+        {
+            var @case = await _context.Cases.FindAsync(id);
+
+            if (@case != null)
+            {
+                @case.SetStatus(spam);
+                _context.Update(@case);
+                _context.SaveChanges();
+            }
+
+            return Json("OK");
+        }
+
+
+        // Put: api/cases  //  spam  , not considered
+        [HttpPut("SetComment/{comment}/{id}")]
+        [Authorize]
+        public async Task<ActionResult> SetComment(int id, string comment)
+        {
+            var @case = await _context.Cases.FindAsync(id);
+
+            if (@case != null)
+            {
+                @case.SetComment(comment);
+                _context.Update(@case);
+                _context.SaveChanges();
+            }
+
+            return Json("OK");
         }
     }
 }

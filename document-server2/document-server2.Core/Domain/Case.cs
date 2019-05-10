@@ -32,6 +32,22 @@ namespace document_server2.Core.Domain
             {
                 _documents.Add(new Document(document.Name, document.Url));
             }
+
+
+
+
+        }
+
+        public void SetStatus(string status)
+        {
+            
+            Status = status;
+        }
+
+        public void SetComment(string comment)
+        {
+
+            Comment = comment;
         }
     }
 }

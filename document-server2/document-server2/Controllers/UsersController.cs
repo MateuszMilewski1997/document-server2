@@ -1,9 +1,14 @@
 ﻿using document_server2.Controllers.BaseController;
+using document_server2.Core.Domain;
+using document_server2.Core.Domain.Context;
 using document_server2.Infrastructure.Comends;
 using document_server2.Infrastructure.DTO;
 using document_server2.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace document_server2.Controllers
@@ -11,9 +16,12 @@ namespace document_server2.Controllers
     public class UsersController : ApiControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        private readonly DataBaseContext _context;
+
+        public UsersController(IUserService userService, DataBaseContext context)
         {
             _userService = userService;
+            _context = context;
         }
 
         // POST: api/users/registration
@@ -39,5 +47,45 @@ namespace document_server2.Controllers
             await _userService.UpdateAsync(email, commend);
             return NoContent();
         }
+
+
+        // PUT: api/users/email
+        [HttpPut("drop/{email}/{role}")]
+        [Authorize]
+        public async Task<ActionResult> Dropuser(string email, string role)
+        {
+            var user = await _context.Users.FindAsync(email);
+
+
+            if (user != null)
+            {
+                user.SetRole(role);
+                _context.Update(user);
+                _context.SaveChanges();
+            }
+
+            return Json("");
+        }
+
+
+        // Get: api/DropUsers/email
+        [HttpGet("DropUsers")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> DropUsers()
+        {
+            IEnumerable<User> users = await _context.Users.Where(x=> x.Role_name == "droped").ToListAsync();
+            return Json(users);
+        }
+
+
+        // Get: api/DropUsers/email
+        [HttpGet("ActiveUsers")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> ActiveUsers()
+        {
+            IEnumerable<User> users = await _context.Users.Where(x => x.Role_name != "droped").ToListAsync();
+            return Json(users);
+        }
+
     }
 }
