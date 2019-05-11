@@ -100,8 +100,8 @@ namespace document_server2.Infrastructure.Services
         public async Task<CaseDetailsDTO> GetCaseAsync(int id)
             => _mapper.Map<CaseDetailsDTO>(await _userRepository.GetCaseAsync(id));
 
-        public async Task<IEnumerable<CaseDTO>> GetFilterCaseAsync(int id, string type, string sort)
-            => throw new NotImplementedException();
+        public async Task<IEnumerable<CaseDTO>> GetFilterCaseAsync(string email, string type, string sort)
+            => _mapper.Map<IEnumerable<CaseDTO>>(await _userRepository.GetFilterUserCasesAsync(email, type, sort));
 
         public async Task<IEnumerable<CaseDTO>> GetAllUserCaseAsync(string email)
             => _mapper.Map<IEnumerable<CaseDTO>>(await _userRepository.GetAllUserCaseAsync(email));
