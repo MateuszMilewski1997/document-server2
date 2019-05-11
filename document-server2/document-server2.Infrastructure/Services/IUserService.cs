@@ -13,7 +13,10 @@ namespace document_server2.Infrastructure.Services
         Task<LoginDTO> LoginAsync(string email, string password);
         Task UpdateAsync(string email, UpdateUser data);
         Task<CaseDetailsDTO> GetCaseAsync(int id);
+        Task<IEnumerable<CaseDTO>> GetFilterCaseAsync(string email, string type, string sort);
         Task<IEnumerable<CaseDTO>> GetAllUserCaseAsync(string email);
         Task AddCaseAsync(string email, CreateCase @case);
+        Task UpdateCaseAsync(int id, UpdateCase data);
+        Task SendEmailAsync(string sender_email, CreateCase @case);
     }
 }

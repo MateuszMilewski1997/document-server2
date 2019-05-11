@@ -12,16 +12,15 @@ namespace document_server2.Core.Domain
         public string Description { get; private set; }
         public string Comment { get; private set; }
         public string Status { get; private set; }
-        private ISet<doc> _documents = new HashSet<doc>();
-        public virtual IEnumerable<doc> Documents => _documents;
-
-        public string User_Mail { get; set; }
-
+        private ISet<Document> _documents = new HashSet<Document>();
+        public virtual IEnumerable<Document> Documents => _documents;
+        private ISet<Recipient> _recipients = new HashSet<Recipient>();
+        public virtual IEnumerable<Recipient> Recipients => _recipients;
         protected Case()
         {
 
         }
-        public Case(string user_email, string type, string description, IEnumerable<doc> documents)
+        public Case(string user_email, string type, string description, IEnumerable<Document> documents, IEnumerable<string> recipients)
         {
             User_email = user_email;
             Type = type;
@@ -30,25 +29,32 @@ namespace document_server2.Core.Domain
             Comment = string.Empty;
             Status = "not considered";
 
-            foreach (doc document in documents)
+            foreach (Document document in documents)
             {
-                _documents.Add(new doc(document.Name, document.Url));
+                _documents.Add(new Document(document.Name, document.Url));
             }
 
-
-
-
+            foreach (string email in recipients)
+            {
+                _recipients.Add(new Recipient(email));
+            }
         }
 
         public void SetStatus(string status)
         {
-            
+            if(status == null)
+            {
+                return;
+            }
             Status = status;
         }
 
         public void SetComment(string comment)
         {
-
+            if (comment == null)
+            {
+                return;
+            }
             Comment = comment;
         }
     }

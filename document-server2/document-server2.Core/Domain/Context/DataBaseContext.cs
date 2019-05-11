@@ -75,7 +75,7 @@ namespace document_server2.Core.Domain.Context
                       .IsRequired(true);
             });
 
-            modelBuilder.Entity<doc>(column =>
+            modelBuilder.Entity<Document>(column =>
             {
                 column.Property(name => name.Case_id)
                       .HasColumnType("int")
@@ -88,29 +88,41 @@ namespace document_server2.Core.Domain.Context
                       .IsRequired(true);
             });
 
+            modelBuilder.Entity<Recipient>(column =>
+            {
+                column.Property(name => name.Case_id)
+                      .HasColumnType("int")
+                      .IsRequired(true);
+                column.Property(name => name.Email)
+                      .HasColumnType("nvarchar(50)")
+                      .IsRequired(true);
+            });
+
             modelBuilder.Entity<User>()
                         .HasOne(a => a.Role)
                         .WithMany()
-                        .HasForeignKey(x => x.Role_name)
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey(x => x.Role_name);
 
             modelBuilder.Entity<User>()
                         .HasMany(a => a.Cases)
                         .WithOne()
-                        .HasForeignKey(x => x.User_email)
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey(x => x.User_email);
 
             modelBuilder.Entity<Case>()
                         .HasMany(a => a.Documents)
                         .WithOne()
-                        .HasForeignKey(x => x.Case_id)
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey(x => x.Case_id);
+
+            modelBuilder.Entity<Case>()
+                        .HasMany(a => a.Recipients)
+                        .WithOne()
+                        .HasForeignKey(x => x.Case_id);
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Case> Cases { get; set; }
-        public DbSet<doc> Documents { get; set; }
-        public IEnumerable<object> Case { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<Recipient> Recipients { get; set; }
     }
 }

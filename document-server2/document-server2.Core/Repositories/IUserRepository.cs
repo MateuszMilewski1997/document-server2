@@ -11,6 +11,8 @@ namespace document_server2.Core.Repositories
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task<Case> GetCaseAsync(int id);
+        //Task<IEnumerable<Case>> GetFilterUserCaseAsync(string email, string type, string sort);
         Task<IEnumerable<Case>> GetAllUserCaseAsync(string email);
+        Task UpdateCaseAsync(Case @case);
     }
 }

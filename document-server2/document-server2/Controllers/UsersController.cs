@@ -48,27 +48,7 @@ namespace document_server2.Controllers
             return NoContent();
         }
 
-
-        // PUT: api/users/email
-        [HttpPut("drop/{email}/{role}")]
-        [Authorize]
-        public async Task<ActionResult> Dropuser(string email, string role)
-        {
-            var user = await _context.Users.FindAsync(email);
-
-
-            if (user != null)
-            {
-                user.SetRole(role);
-                _context.Update(user);
-                _context.SaveChanges();
-            }
-
-            return Json("");
-        }
-
-
-        // Get: api/DropUsers/email
+        // GET: api/DropUsers/
         [HttpGet("DropUsers")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> DropUsers()
@@ -77,8 +57,7 @@ namespace document_server2.Controllers
             return Json(users);
         }
 
-
-        // Get: api/DropUsers/email
+        // GET: api/DropUsers
         [HttpGet("ActiveUsers")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> ActiveUsers()

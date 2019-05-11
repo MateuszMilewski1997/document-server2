@@ -15,6 +15,7 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace document_server2.Controllers
 {
@@ -53,26 +54,11 @@ namespace document_server2.Controllers
             return Json(@case);
         }
 
-
-        
-        [HttpGet("list/{mail}")]
+        // GET: api/cases/complaint:desc
+        [HttpGet("{type}/{sort}")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Case>>> GetUserCase(string mail)
-        {
-            
-            IEnumerable<Case> cases = await _context.Cases.Where(x => x.User_email == mail).ToListAsync();
-            return Json(cases);
-        }
-
-        [HttpGet("getdocuments/{id}")]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<Case>>> getdocuments(int id)
-        {
-
-            IEnumerable<doc> cases = await _context.Documents.Where(x => x.Case_id == id).ToListAsync();
-            return Json(cases);
-        }
-
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> GetFilterCase(string type, string sort)
+            => Json(await _userService.GetFilterCaseAsync(UserEmail, type, sort));
 
         // POST: api/cases
         [HttpPost]
@@ -80,49 +66,28 @@ namespace document_server2.Controllers
         public async Task<ActionResult> PostCase([FromBody] CreateCase @case)
         {
             await _userService.AddCaseAsync(UserEmail, @case);
+            await _userService.SendEmailAsync(UserEmail, @case);
             return Created("/cases", null);
         }
 
-
-        // Put: api/cases  //  spam  , not considered
-        [HttpPut("{id}/{spam}")]
+        // PUT: api/cases/id
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult> Spam(int id, string spam )
+        public async Task<ActionResult> SetComment(int id, [FromBody] UpdateCase data)
         {
-            var @case = await _context.Cases.FindAsync(id);
+            CaseDetailsDTO @case = await _userService.GetCaseAsync(id);
 
-            if (@case != null)
+            if (@case == null)
             {
-                @case.SetStatus(spam);
-                _context.Update(@case);
-                _context.SaveChanges();
+                return NotFound();
             }
 
-            return Json("OK");
+            await _userService.UpdateCaseAsync(id, data);
+            return NoContent();
         }
-
-
-        // Put: api/cases  //  spam  , not considered
-        [HttpPut("SetComment/{comment}/{id}")]
-        [Authorize]
-        public async Task<ActionResult> SetComment(int id, string comment)
-        {
-            var @case = await _context.Cases.FindAsync(id);
-
-            if (@case != null)
-            {
-                @case.SetComment(comment);
-                _context.Update(@case);
-                _context.SaveChanges();
-            }
-
-            return Json("OK");
-        }
-
-
 
         [HttpPost("sendtoken/{email}")]
-        public async Task<ActionResult> sendtoken(string email)
+        public async Task<ActionResult> Sendtoken(string email)
         {
            // if (_context.Cases.Any(e => e.User_Mail == email))
            // {
