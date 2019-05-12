@@ -4,7 +4,6 @@ using document_server2.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace document_server2.Infrastructure.Repositories
@@ -19,18 +18,19 @@ namespace document_server2.Infrastructure.Repositories
         }
 
         public async Task<User> GetByEmailAsync(string email)
-            => await _context.Users
+        => await _context.Users
             .Include(x => x.Cases)
                 .ThenInclude(x => x.Documents)
             .Include(x => x.Role)
-            .SingleOrDefaultAsync(user => user.Email.Equals(email));
+            .SingleOrDefaultAsync(user => user.Email == email);
+
 
         public async Task<User> GetByLoginAsync(string login)
             => await _context.Users
             .Include(x => x.Cases)
                 .ThenInclude(x => x.Documents)
             .Include(x => x.Role)
-            .SingleOrDefaultAsync(user => user.Login.Equals(login));
+            .SingleOrDefaultAsync(user => user.Login == login);
 
         public async Task AddAsync(User user)
         {
@@ -54,12 +54,12 @@ namespace document_server2.Infrastructure.Repositories
             if (sort == "desc")
             {
                 return await _context.Cases.Include(x => x.Documents).Where(x => x.Type == type && x.User_email == email)
-                    .OrderByDescending(x => x.Type).ToListAsync();
+                    .OrderByDescending(x => x.Date).ToListAsync();
             }
             else if(sort == "asc")
             {
                 return await _context.Cases.Include(x => x.Documents).Where(x => x.Type == type && x.User_email == email)
-                    .OrderBy(x => x.Type).ToListAsync();
+                    .OrderBy(x => x.Date).ToListAsync();
             }
 
             return null;

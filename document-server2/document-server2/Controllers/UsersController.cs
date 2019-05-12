@@ -28,7 +28,7 @@ namespace document_server2.Controllers
         [HttpPost("registration")]
         public async Task<ActionResult> Register([FromBody] CreateUser data)
         {
-            await _userService.RegisterAsync(data);
+            await _userService.RegisterAsync(data, "registered");
             return Created("/users", null);
         }
 

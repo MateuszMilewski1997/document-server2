@@ -26,13 +26,16 @@ namespace document_server2.Infrastructure.Services
             _jwtHandler = jwtHandler;
         }
 
-        public async Task<UserDTO> GetByLoginAsync(string email)
+        public async Task<UserDTO> GetByEmailAsync(string email)
             => _mapper.Map<UserDTO>(await _userRepository.GetByEmailAsync(email));
 
-        public async Task<UserDTO> GetByEmailAsync(string login)
-            => _mapper.Map<UserDTO>(await _userRepository.GetByLoginAsync(login));
+        public async Task<UserDTO> GetByLoginAsync(string login)
+        {
+           UserDTO user = _mapper.Map<UserDTO>(await _userRepository.GetByLoginAsync(login));
+            return user;
+        }
 
-        public async Task RegisterAsync(CreateUser data)
+        public async Task RegisterAsync(CreateUser data, string type)
         {
             User user = await _userRepository.GetByEmailAsync(data.Email);
             if (user != null)
@@ -46,7 +49,14 @@ namespace document_server2.Infrastructure.Services
                 throw new Exception($"User e-mail: '{data.Email}' already exists.");
             }
 
-            user = new User(data.Email, data.Login, data.Password, data.Role);
+            if(type == "registered")
+            {
+                user = new User(data.Email, data.Login, data.Password, data.Role);
+            }
+            else if(type == "unregistered")
+            {
+                user = new User(data.Email, "unregistered");
+            }
             await _userRepository.AddAsync(user);
         }
 

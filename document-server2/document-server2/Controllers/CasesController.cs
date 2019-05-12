@@ -1,21 +1,15 @@
 ﻿using document_server2.Controllers.BaseController;
-using document_server2.Core.Domain;
 using document_server2.Core.Domain.Context;
 using document_server2.Infrastructure.Comends;
 using document_server2.Infrastructure.DTO;
 using document_server2.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace document_server2.Controllers
 {
@@ -85,57 +79,6 @@ namespace document_server2.Controllers
             await _userService.UpdateCaseAsync(id, data);
             return NoContent();
         }
-
-        [HttpPost("sendtoken/{email}")]
-        public async Task<ActionResult> Sendtoken(string email)
-        {
-           // if (_context.Cases.Any(e => e.User_Mail == email))
-           // {
-
-                var random = new Random();
-
-                var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var stringChars = new char[8];
-
-
-                for (int i = 0; i < stringChars.Length; i++)
-                {
-                    stringChars[i] = chars[random.Next(chars.Length)];
-                }
-
-                string key = new String(stringChars);
-
-                
-                _cache.Set("key", key, TimeSpan.FromMinutes(180));
-                SmtpClient client = new SmtpClient();
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.EnableSsl = true;
-                client.Host = "smtp.gmail.com";
-                client.Port = 587;
-
-                // setup Smtp authentication
-                System.Net.NetworkCredential credentials =
-                    new System.Net.NetworkCredential("FakultetBillenium@gmail.com", "haslo4321");
-                client.UseDefaultCredentials = false;
-                client.Credentials = credentials;
-
-                MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("FakultetBillenium@gmail.com");
-
-                //msg.To.Add(new MailAddress("milewskimateusz28@gmail.com"));
-                msg.To.Add(new MailAddress(email));
-
-
-                msg.Subject = "System zarządzania obiegiem dokumentów";
-                msg.IsBodyHtml = true;
-                msg.Body = string.Format($"<html><head></head><body><b>Twój klucz: {key} </b>   </body>");
-
-                client.Send(msg);
-           // }
-
-            return Ok();
-        }
-
         
       /*  // POST: api/cases
         [HttpPost("{id}/{url}/{filename}")]

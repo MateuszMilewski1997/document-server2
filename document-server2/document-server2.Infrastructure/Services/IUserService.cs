@@ -9,7 +9,7 @@ namespace document_server2.Infrastructure.Services
     {
         Task<UserDTO> GetByLoginAsync(string email);
         Task<UserDTO> GetByEmailAsync(string login);
-        Task RegisterAsync(CreateUser data);
+        Task RegisterAsync(CreateUser data, string type);
         Task<LoginDTO> LoginAsync(string email, string password);
         Task UpdateAsync(string email, UpdateUser data);
         Task<CaseDetailsDTO> GetCaseAsync(int id);

@@ -26,6 +26,12 @@ namespace document_server2.Core.Domain
             SetRole(role_name);
         }
 
+        public User(string email, string role_name)
+        {
+            SetEmail(email);
+            SetRole(role_name);
+        }
+
         private void SetEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))

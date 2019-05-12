@@ -35,6 +35,9 @@ namespace document_server2
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtHandler, JwtHandler>();
 
+            // Cache
+            services.AddMemoryCache();
+
             // Poprawienie formatowania skłądni json
             services.AddMvc()
                     .AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
