@@ -58,6 +58,9 @@ namespace document_server2.Core.Domain.Context
                 column.Property(name => name.User_email)
                       .HasColumnType("nvarchar(50)")
                       .IsRequired(true);
+                column.Property(name => name.Title)
+                      .HasColumnType("nvarchar(50)")
+                      .IsRequired(true);
                 column.Property(name => name.Type)
                       .HasColumnType("nvarchar(60)")
                       .IsRequired(true);

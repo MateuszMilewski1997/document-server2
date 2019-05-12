@@ -60,7 +60,6 @@ namespace document_server2.Controllers
         public async Task<ActionResult> PostCase([FromBody] CreateCase @case)
         {
             await _userService.AddCaseAsync(UserEmail, @case);
-            await _userService.SendEmailAsync(UserEmail, @case);
             return Created("/cases", null);
         }
 

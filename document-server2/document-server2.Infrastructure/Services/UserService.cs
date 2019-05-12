@@ -68,7 +68,7 @@ namespace document_server2.Infrastructure.Services
                 throw new Exception("Invalid credentials.");
             }
 
-            if(user.Password != password)
+            if (user.Password != password)
             {
                 throw new Exception("Invalid credentials.");
             }
