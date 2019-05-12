@@ -7,6 +7,7 @@ namespace document_server2.Core.Domain
     public class Case : EntityInt
     {
         public string User_email { get; private set; }
+        public string Title { get; private set; }
         public string Type { get; private set; }
         public DateTime Date { get; private set; }
         public string Description { get; private set; }
@@ -20,8 +21,9 @@ namespace document_server2.Core.Domain
         {
 
         }
-        public Case(string user_email, string type, string description, IEnumerable<Document> documents)
+        public Case(string title, string user_email, string type, string description, IEnumerable<Document> documents)
         {
+            Title = title;
             User_email = user_email;
             Type = type;
             Date = DateTime.UtcNow;
