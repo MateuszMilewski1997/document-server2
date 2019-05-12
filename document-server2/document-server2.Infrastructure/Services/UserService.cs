@@ -30,10 +30,7 @@ namespace document_server2.Infrastructure.Services
             => _mapper.Map<UserDTO>(await _userRepository.GetByEmailAsync(email));
 
         public async Task<UserDTO> GetByLoginAsync(string login)
-        {
-           UserDTO user = _mapper.Map<UserDTO>(await _userRepository.GetByLoginAsync(login));
-            return user;
-        }
+            => _mapper.Map<UserDTO>(await _userRepository.GetByLoginAsync(login));
 
         public async Task RegisterAsync(CreateUser data, string type)
         {
@@ -60,12 +57,17 @@ namespace document_server2.Infrastructure.Services
             await _userRepository.AddAsync(user);
         }
 
-        public async Task<LoginDTO> LoginAsync(string email, string password)
+        public async Task<LoginDTO> LoginAsync(string identity, string password)
         {
-            User user = await _userRepository.GetByEmailAsync(email);
+            User user = await _userRepository.GetByEmailAsync(identity);
             if (user == null)
             {
-                throw new Exception("Invalid credentials.");
+                user = await _userRepository.GetByLoginAsync(identity);
+
+                if (user == null)
+                {
+                    throw new Exception("Invalid credentials.");
+                }
             }
 
             if (user.Password != password)
