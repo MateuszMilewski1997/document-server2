@@ -134,12 +134,17 @@ namespace document_server2.Infrastructure.Services
             Case @case = await _userRepository.GetCaseAsync(id);
             if(@case != null)
             {
-                @case.SetComment(data.Comment);
-                @case.SetStatus(data.Status);
+                if(data.Comment != null)
+                    @case.SetComment(data.Comment);
+                if (data.Status != null)
+                    @case.SetStatus(data.Status);
 
-                foreach(var document in data.Documents)
+                if(data.Documents != null)
                 {
-                    @case.AddDocument(document.Name, document.Url);
+                    foreach (var document in data.Documents)
+                    {
+                        @case.AddDocument(document.Name, document.Url);
+                    }
                 }
             }
             await _userRepository.UpdateCaseAsync(@case);
