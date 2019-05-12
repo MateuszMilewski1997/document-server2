@@ -121,7 +121,7 @@ namespace document_server2.Infrastructure.Services
             User user = await _userRepository.GetByEmailAsync(email);
             if (user != null)
             {
-                Case new_case = new Case(email, @case.Type, @case.Description, _mapper.Map<IEnumerable<Document>>(@case.Documents), @case.Recipients);
+                Case new_case = new Case(email, @case.Type, @case.Description, _mapper.Map<IEnumerable<Document>>(@case.Documents));
                 user.AddCase(new_case);
                 await _userRepository.UpdateAsync(user);
             }
@@ -162,11 +162,6 @@ namespace document_server2.Infrastructure.Services
             {
                 From = new MailAddress("FakultetBillenium@gmail.com")
             };
-
-            foreach (string email in @case.Recipients)
-            {
-                message.To.Add(new MailAddress(email));
-            }
 
             StringBuilder documents  = new StringBuilder();
 

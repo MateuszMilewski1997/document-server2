@@ -20,7 +20,7 @@ namespace document_server2.Core.Domain
         {
 
         }
-        public Case(string user_email, string type, string description, IEnumerable<Document> documents, IEnumerable<string> recipients)
+        public Case(string user_email, string type, string description, IEnumerable<Document> documents)
         {
             User_email = user_email;
             Type = type;
@@ -32,11 +32,6 @@ namespace document_server2.Core.Domain
             foreach (Document document in documents)
             {
                 _documents.Add(new Document(document.Name, document.Url));
-            }
-
-            foreach (string email in recipients)
-            {
-                _recipients.Add(new Recipient(email));
             }
         }
 
