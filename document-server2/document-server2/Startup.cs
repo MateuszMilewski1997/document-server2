@@ -84,7 +84,7 @@ namespace document_server2
                 builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:5000")
+                        .WithOrigins("http://localhost:4200")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
