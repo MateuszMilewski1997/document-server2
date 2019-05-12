@@ -29,7 +29,7 @@ namespace document_server2.Controllers
 
             if (user == null)
             {
-                await _userService.RegisterAsync(new CreateUser() { Email = email }, "unregistered");
+                return NotFound();
             }
 
             var random = new Random();
@@ -70,6 +70,7 @@ namespace document_server2.Controllers
             return Created("/unregistered/cases", null);
         }
 
+        // GET: api/unregistered/cases/email/token
         [HttpGet("cases/{email}/{token}")]
         public async Task<ActionResult> GetCase(string email, string token)
         {
@@ -88,6 +89,80 @@ namespace document_server2.Controllers
             }
 
             return Json(await _userService.GetAllUserCaseAsync(email));
+        }
+
+        // POST: api/unregistered/cases/email
+        [HttpPost("{email}")]
+        public async Task<ActionResult> PostCase([FromBody] CreateCase @case, string email)
+        {
+            await _userService.AddCaseAsync(email, @case);
+            return Created("/cases", null);
+        }
+
+        // GET: api/unregistered/cases/case_id/token/email
+        [HttpGet("cases/{case_id}/{token}/{email}")]
+        public async Task<ActionResult> GetCase(int case_id, string token, string email)
+        {
+            UserDTO user = await _userService.GetByEmailAsync(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            string key = _cache.Get<string>("key");
+
+            if ($"{email}-{token}" != key)
+            {
+                return NotFound();
+            }
+
+            var @case = await _userService.GetCaseAsync(case_id);
+
+            return Json(@case);
+        }
+
+        // POST: api/unregistered/cases/email
+        [HttpPost("cases/{email}")]
+        public async Task<ActionResult> UpdateCase(string email, [FromBody]CreateCase newCase)
+        {
+            UserDTO user = await _userService.GetByEmailAsync(email);
+
+            if (user == null)
+            {
+                await _userService.RegisterAsync(new CreateUser() { Email = email }, "unregistered");
+            }
+
+            await _userService.AddCaseAsync(email, newCase);
+
+            return Created("/cases", null);
+        }
+
+        // POST: api/unregistered/cases/token/case_id/email
+        [HttpPut("cases/{token}/{case_id}/{email}")]
+        public async Task<ActionResult> UpdateCase(int case_id, string token, string email, [FromBody] UpdateCase @case)
+        {
+            CaseDetailsDTO caseuser = await _userService.GetCaseAsync(case_id);
+
+            if (caseuser == null)
+            {
+                return NotFound();
+            }
+
+            if(caseuser.User_email != email)
+            {
+                return NotFound();
+            }
+
+            string key = _cache.Get<string>("key");
+
+            if ($"{email}-{token}" != key)
+            {
+                return NotFound();
+            }
+
+            await _userService.UpdateCaseAsync(case_id, @case);
+            return Created("/cases", null);
         }
     }
 }

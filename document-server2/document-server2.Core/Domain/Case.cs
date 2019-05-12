@@ -40,6 +40,12 @@ namespace document_server2.Core.Domain
             }
         }
 
+        public void AddDocument(string name, string url)
+        {
+            _documents.Add(new Document(name, url));
+        }
+
+
         public void SetStatus(string status)
         {
             if(status == null)

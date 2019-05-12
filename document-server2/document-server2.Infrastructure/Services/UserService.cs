@@ -134,6 +134,11 @@ namespace document_server2.Infrastructure.Services
             {
                 @case.SetComment(data.Comment);
                 @case.SetStatus(data.Status);
+
+                foreach(var document in data.Documents)
+                {
+                    @case.AddDocument(document.Name, document.Url);
+                }
             }
             await _userRepository.UpdateCaseAsync(@case);
         }
