@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using document_server2.Core.Domain;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace document_server2.Controllers
 {
@@ -31,6 +34,16 @@ namespace document_server2.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<CaseDTO>>> GetCases()
             => Json(await _userService.GetAllUserCaseAsync(UserEmail));
+
+        // GET: api/cases/spam
+        [HttpGet("/spam")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> Spam()
+        {
+            IEnumerable<Case> cases = await _context.Cases.Where(x => x.Status == "spam").ToListAsync();
+            return Json(cases);
+        }
+
 
         // GET: api/cases/id
         [HttpGet("{id}")]
@@ -79,35 +92,6 @@ namespace document_server2.Controllers
             return NoContent();
         }
         
-      /*  // POST: api/cases
-        [HttpPost("{id}/{url}/{filename}")]
-        [Authorize]
-        public async Task<ActionResult<Document>> EditCase(int id, string url, string filename)
-        {
-            var @case = await _context.Cases.FindAsync(id);
-              
-
-            if( @case != null )
-            {
-
-                Document doc = new Document()
-                {
-                   Case_id = id,
-                   Name = filename,
-                   Url = url
-
-                };
-
-                _context.Users.Add(doc);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                return NoContent();
-            }
-
-            return Created("/cases", null);
-        }*/
-
+     
     }
 }

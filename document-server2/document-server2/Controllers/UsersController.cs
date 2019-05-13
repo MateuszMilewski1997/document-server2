@@ -48,23 +48,26 @@ namespace document_server2.Controllers
             return NoContent();
         }
 
+
+      
+
         // GET: api/DropUsers/
         [HttpGet("DropUsers")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> DropUsers()
-        {
-            IEnumerable<User> users = await _context.Users.Where(x=> x.Role_name == "droped").ToListAsync();
-            return Json(users);
-        }
+        public async Task<ActionResult<IEnumerable<User>>> DropUsers() => Json(await _context.Users.Where(x => x.Role_name == "droped").ToListAsync());
+       
+
+        // GET: api/Users/list
+        [HttpGet("List")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> Users() => Json( await _context.Users.ToListAsync());
+
 
         // GET: api/DropUsers
         [HttpGet("ActiveUsers")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> ActiveUsers()
-        {
-            IEnumerable<User> users = await _context.Users.Where(x => x.Role_name != "droped").ToListAsync();
-            return Json(users);
-        }
+        public async Task<ActionResult<IEnumerable<User>>> ActiveUsers() => Json(await _context.Users.Where(x => x.Role_name != "droped").ToListAsync());
+       
 
     }
 }
