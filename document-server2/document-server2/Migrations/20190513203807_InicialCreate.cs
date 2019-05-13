@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace document_server2.Migrations
 {
-    public partial class vfdv : Migration
+    public partial class InicialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,6 +108,21 @@ namespace document_server2.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Name", "Add_comments", "Add_documents", "Add_users", "Change_status" },
+                values: new object[] { "admin", true, true, true, true });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Name", "Add_comments", "Add_documents", "Add_users", "Change_status" },
+                values: new object[] { "unregistered", false, true, false, false });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Name", "Add_comments", "Add_documents", "Add_users", "Change_status" },
+                values: new object[] { "registered", true, true, false, false });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cases_User_email",

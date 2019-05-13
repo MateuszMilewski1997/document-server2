@@ -127,6 +127,32 @@ namespace document_server2.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Name = "admin",
+                            Add_comments = true,
+                            Add_documents = true,
+                            Add_users = true,
+                            Change_status = true
+                        },
+                        new
+                        {
+                            Name = "unregistered",
+                            Add_comments = false,
+                            Add_documents = true,
+                            Add_users = false,
+                            Change_status = false
+                        },
+                        new
+                        {
+                            Name = "registered",
+                            Add_comments = true,
+                            Add_documents = true,
+                            Add_users = false,
+                            Change_status = false
+                        });
                 });
 
             modelBuilder.Entity("document_server2.Core.Domain.User", b =>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace document_server2.Core.Domain.Context
 {
@@ -120,6 +119,12 @@ namespace document_server2.Core.Domain.Context
                         .HasMany(a => a.Recipients)
                         .WithOne()
                         .HasForeignKey(x => x.Case_id);
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role("admin", true, true, true, true),
+                new Role("unregistered", true, false, false, false),
+                new Role("registered", true, true, false, false)
+                );
         }
 
         public DbSet<User> Users { get; set; }
