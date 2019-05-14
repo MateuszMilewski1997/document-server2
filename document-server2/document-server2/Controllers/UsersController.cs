@@ -1,4 +1,5 @@
-﻿using document_server2.Controllers.BaseController;
+﻿using AutoMapper;
+using document_server2.Controllers.BaseController;
 using document_server2.Core.Domain;
 using document_server2.Core.Domain.Context;
 using document_server2.Infrastructure.Comends;
@@ -17,11 +18,13 @@ namespace document_server2.Controllers
     {
         private readonly IUserService _userService;
         private readonly DataBaseContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService, DataBaseContext context)
+        public UsersController(IUserService userService, DataBaseContext context, IMapper mapper)
         {
             _userService = userService;
             _context = context;
+            _mapper = mapper;
         }
 
         // POST: api/users/registration
@@ -48,26 +51,24 @@ namespace document_server2.Controllers
             return NoContent();
         }
 
-
-      
-
         // GET: api/DropUsers/
         [HttpGet("DropUsers")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> DropUsers() => Json(await _context.Users.Where(x => x.Role_name == "droped").ToListAsync());
+        public async Task<ActionResult<IEnumerable<User>>> DropUsers()
+            => Json(await _context.Users.Where(x => x.Role_name == "droped").ToListAsync());
        
 
         // GET: api/Users/list
         [HttpGet("List")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> Users() => Json( await _context.Users.ToListAsync());
+        public async Task<ActionResult<IEnumerable<UserDTO>>> Users()
+            => Json( _mapper.Map<IEnumerable<UserDTO>>(await _context.Users.ToListAsync()));
 
 
         // GET: api/DropUsers
         [HttpGet("ActiveUsers")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> ActiveUsers() => Json(await _context.Users.Where(x => x.Role_name != "droped").ToListAsync());
-       
-
+        public async Task<ActionResult<IEnumerable<UserDTO>>> ActiveUsers()
+            => Json(_mapper.Map<IEnumerable<UserDTO>>(await _context.Users.Where(x => x.Role_name != "droped").ToListAsync()));
     }
 }
