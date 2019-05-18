@@ -72,12 +72,12 @@ namespace document_server2.Controllers
             => Json(_mapper.Map<IEnumerable<UserDTO>>(await _context.Users.Where(x => x.Role_name != "droped").ToListAsync()));
 
         // PUT: api/users/dropUser/5
-        [HttpPut("dropUser/{id}")]
-        [Authorize]
-        public async Task<ActionResult> DropUser(int id)
+        [HttpPut("dropUser/{email}")]
+        //[Authorize]
+        public async Task<ActionResult> DropUser(string email)
         {
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FindAsync(email);
 
             if (user != null)
             {
