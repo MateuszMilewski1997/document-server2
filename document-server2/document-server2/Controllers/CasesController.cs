@@ -67,6 +67,27 @@ namespace document_server2.Controllers
         public async Task<ActionResult<IEnumerable<CaseDTO>>> GetFilterCase(string type, string sort)
             => Json(await _userService.GetFilterCaseAsync(UserEmail, type, sort));
 
+
+
+        // GET: api/cases/application
+        [HttpGet("/application")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> Podanie()
+        {
+            IEnumerable<Case> cases = await _context.Cases.Where(x => x.Status == "not considered" && x.Type == "podanie").ToListAsync();
+            return Json(cases);
+        }
+
+        // GET: api/cases/complaint
+        [HttpGet("/complaint")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> Skarga()
+        {
+            IEnumerable<Case> cases = await _context.Cases.Where(x => x.Status == "not considered" && x.Type == "skarga").ToListAsync();
+            return Json(cases);
+        }
+
+
         // POST: api/cases
         [HttpPost]
         [Authorize]
