@@ -112,8 +112,8 @@ namespace document_server2.Controllers
             return NoContent();
         }
 
-        // GET: api/cases/status
-        [HttpGet("{status}")]
+        // GET: api/cases/status/status
+        [HttpGet("status/{status}")]
         [Authorize]
         public async Task<ActionResult> GetCasesWithStatus(string status)
             => Json(await _context.Cases.Where(x => x.Status == status).ToListAsync());
