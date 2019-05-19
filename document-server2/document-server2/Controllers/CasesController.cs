@@ -68,7 +68,6 @@ namespace document_server2.Controllers
             => Json(await _userService.GetFilterCaseAsync(UserEmail, type, sort));
 
 
-
         // GET: api/cases/application
         [HttpGet("/application")]
         [Authorize]
@@ -112,7 +111,11 @@ namespace document_server2.Controllers
             await _userService.UpdateCaseAsync(id, data);
             return NoContent();
         }
-        
-     
+
+        // GET: api/cases/status
+        [HttpGet("{status}")]
+        [Authorize]
+        public async Task<ActionResult> GetCasesWithStatus(string status)
+            => Json(await _context.Cases.Where(x => x.Status == status).ToListAsync());
     }
 }
