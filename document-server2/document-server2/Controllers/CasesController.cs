@@ -116,10 +116,10 @@ namespace document_server2.Controllers
             return NoContent();
         }
 
-        // GET: api/cases/status/status
-        [HttpGet("status/{status}")]
+        // GET: api/cases/type/status
+        [HttpGet("type/{type}")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<DocumentDTO>>> GetCasesWithStatus(string status)
-            => Json(_mapper.Map<IEnumerable<DocumentDTO>>(await _context.Cases.Where(x => x.Status == status).ToListAsync()));
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> GetCasesWithStatus(string type)
+            => Json(_mapper.Map<IEnumerable<CaseDTO>>(await _context.Cases.Where(x => x.Type == type && x.Status == "not considered").ToListAsync()));
     }
 }
