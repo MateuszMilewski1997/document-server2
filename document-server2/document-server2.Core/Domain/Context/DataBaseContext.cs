@@ -123,7 +123,8 @@ namespace document_server2.Core.Domain.Context
             modelBuilder.Entity<Role>().HasData(
                 new Role("admin", true, true, true, true),
                 new Role("unregistered", true, false, false, false),
-                new Role("registered", true, true, false, false)
+                new Role("registered", true, true, false, false),
+                new Role("dropped", false, true, false, false)
                 );
         }
 

@@ -73,16 +73,14 @@ namespace document_server2.Controllers
 
         // PUT: api/users/dropUser/5
         [HttpPut("dropUser/{email}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> DropUser(string email)
         {
-
             var user = await _context.Users.FindAsync(email);
 
             if (user != null)
             {
-                user.SetRole("droped");
-
+                user.SetRole("dropped");
 
                 _context.Update(user);
                 _context.SaveChanges();
@@ -92,8 +90,5 @@ namespace document_server2.Controllers
             else
                 return NoContent();
         }
-
-
-
     }
 }
