@@ -52,7 +52,7 @@ namespace document_server2.Infrastructure.Services
             }
             else if(type == "unregistered")
             {
-                user = new User(data.Email, data.Role);
+                user = new User(data.Email, "unregistered");
             }
             await _userRepository.AddAsync(user);
         }
