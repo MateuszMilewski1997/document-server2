@@ -13,7 +13,6 @@ using Microsoft.Extensions.Caching.Memory;
 using document_server2.Core.Domain;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using static document_server2.Infrastructure.DTO.CaseDetailsDTO;
 using AutoMapper;
 
 namespace document_server2.Controllers
@@ -121,5 +120,10 @@ namespace document_server2.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<CaseDTO>>> GetCasesWithStatus(string type)
             => Json(_mapper.Map<IEnumerable<CaseDTO>>(await _context.Cases.Where(x => x.Type == type && x.Status == "not considered").ToListAsync()));
+
+        // GET: api/admin/cases
+        [HttpGet("admin/cases")]
+        public async Task<ActionResult<IEnumerable<CaseDTO>>> GetAllCasesUsers()
+            => Json(_mapper.Map<IEnumerable<CaseDTO>>(await _context.Cases.ToListAsync()));
     }
 }
