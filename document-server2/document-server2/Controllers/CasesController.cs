@@ -121,8 +121,8 @@ namespace document_server2.Controllers
         public async Task<ActionResult<IEnumerable<CaseDTO>>> GetCasesWithStatus(string type)
             => Json(_mapper.Map<IEnumerable<CaseDTO>>(await _context.Cases.Where(x => x.Type == type && x.Status == "not considered").ToListAsync()));
 
-        // GET: api/admin/cases
-        [HttpGet("admin/cases")]
+        // GET: api/cases/admin
+        [HttpGet("admin")]
         public async Task<ActionResult<IEnumerable<CaseDTO>>> GetAllCasesUsers()
             => Json(_mapper.Map<IEnumerable<CaseDTO>>(await _context.Cases.ToListAsync()));
     }
