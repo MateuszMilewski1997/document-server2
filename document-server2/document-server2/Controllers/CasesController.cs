@@ -13,6 +13,8 @@ using Microsoft.Extensions.Caching.Memory;
 using document_server2.Core.Domain;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using static document_server2.Infrastructure.DTO.CaseDetailsDTO;
+using AutoMapper;
 
 namespace document_server2.Controllers
 {
@@ -21,12 +23,14 @@ namespace document_server2.Controllers
         private readonly IUserService _userService;
         private readonly DataBaseContext _context;
         private readonly IMemoryCache _cache;
+        private readonly IMapper _mapper;
 
-        public CasesController(IUserService userService, DataBaseContext context, IMemoryCache cache)
+        public CasesController(IUserService userService, DataBaseContext context, IMemoryCache cache, IMapper mapper)
         {
             _userService = userService;
             _context = context;
             _cache = cache;
+            _mapper = mapper;
         }
 
         // GET: api/cases
@@ -115,7 +119,7 @@ namespace document_server2.Controllers
         // GET: api/cases/status/status
         [HttpGet("status/{status}")]
         [Authorize]
-        public async Task<ActionResult> GetCasesWithStatus(string status)
-            => Json(await _context.Cases.Where(x => x.Status == status).ToListAsync());
+        public async Task<ActionResult<IEnumerable<DocumentDTO>>> GetCasesWithStatus(string status)
+            => Json(_mapper.Map<IEnumerable<DocumentDTO>>(await _context.Cases.Where(x => x.Status == status).ToListAsync()));
     }
 }
