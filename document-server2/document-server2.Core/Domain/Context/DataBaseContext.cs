@@ -26,7 +26,7 @@ namespace document_server2.Core.Domain.Context
                       .HasColumnType("nvarchar(20)")
                       .IsRequired(false);
                 column.Property(name => name.Password)
-                      .HasColumnType("nvarchar(20)")
+                      .HasColumnType("nvarchar(MAX)")
                       .IsRequired(false);
                 column.Property(name => name.Role_name)
                       .HasColumnType("nvarchar(20)")
@@ -37,18 +37,6 @@ namespace document_server2.Core.Domain.Context
             {
                 column.Property(name => name.Name)
                       .HasColumnType("nvarchar(20)")
-                      .IsRequired(true);
-                column.Property(name => name.Add_documents)
-                      .HasColumnType("bit")
-                      .IsRequired(true);
-                column.Property(name => name.Add_comments)
-                      .HasColumnType("bit")
-                      .IsRequired(true);
-                column.Property(name => name.Change_status)
-                      .HasColumnType("bit")
-                      .IsRequired(true);
-                column.Property(name => name.Add_users)
-                      .HasColumnType("bit")
                       .IsRequired(true);
             });
 
@@ -121,13 +109,20 @@ namespace document_server2.Core.Domain.Context
                         .HasForeignKey(x => x.Case_id);
 
             modelBuilder.Entity<Role>().HasData(
-                new Role("admin", true, true, true, true),
-                new Role("unregistered", true, false, false, false),
-                new Role("registered", true, true, false, false),
-                new Role("dropped", false, true, false, false),
-                new Role("skarga", false, true, true, false),
-                new Role("podanie", false, true, true, true)
+                new Role("admin"),
+                new Role("unregistered"),
+                new Role("registered"),
+                new Role("dropped"),
+                new Role("skarga"),
+                new Role("podanie")
                 );
+
+            modelBuilder.Entity<User>().HasData(
+                new User("admin@admin.com", "admin", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "admin"),
+                new User("podanie@podanie.com", "podanie", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "podanie"),
+                new User("registered@registered.com", "registered", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "registered"),
+                new User("skarga@skarga.com", "skarga", "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b", "skarga")
+            );
         }
 
         public DbSet<User> Users { get; set; }

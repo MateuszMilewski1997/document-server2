@@ -79,14 +79,6 @@ namespace document_server2.Core.Domain
             {
                 throw new Exception("Can not have an empty password.");
             }
-            if (password.Length < 6)
-            {
-                throw new Exception("Password must have more than 5 characters.");
-            }
-            if (password.Length > 20)
-            {
-                throw new Exception("Password can not have more than 20 characters.");
-            }
             Password = password;
         }
 
