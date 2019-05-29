@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 
 namespace document_server2
@@ -59,6 +60,7 @@ namespace document_server2
 
             // Konfiguracja Jwt token
             services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+            services.AddAuthorization(x => x.AddPolicy("AdminRole", p => p.RequireRole("admin")));
 
             services.AddAuthentication(x =>
             {
@@ -91,6 +93,20 @@ namespace document_server2
                 });
             });
 
+            // Konfiguracja Swagger'a
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v2",
+                    Title = "Serwis do zarzadzania dokumentami",
+                    Description = "Serwis do zarzadzania dokumentami",
+                    TermsOfService = "None",
+                    Contact = new Contact() { Name = "Talking Dotnet", Email = "contact@talkingdotnet.com", Url = "www.talkingdotnet.com" }
+                });
+                c.CustomSchemaIds(x => x.FullName);
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -109,6 +125,11 @@ namespace document_server2
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
         }
     }
 }
