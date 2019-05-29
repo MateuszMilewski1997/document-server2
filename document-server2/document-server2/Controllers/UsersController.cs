@@ -28,6 +28,7 @@ namespace document_server2.Controllers
         }
 
         // POST: api/users/registration
+        [Authorize(Policy = "AdminRole")]
         [HttpPost("registration")]
         public async Task<ActionResult> Register([FromBody] CreateUser data)
         {
@@ -43,15 +44,26 @@ namespace document_server2.Controllers
         // PUT: api/users/email
         [HttpPut("{email}")]
         [Authorize]
-        public async Task<ActionResult> PutEvent(string email, [FromBody] UpdateUser commend)
+        public async Task<ActionResult> PutUser(string email, [FromBody] UpdateUser commend)
         {
             if (UserEmail != email)
+            {
                 return Forbid();
+            }
             await _userService.UpdateAsync(email, commend);
             return NoContent();
         }
 
-        // GET: api/DropUsers/
+        // PUT: api/users/admin/email
+        [HttpPut("admin/{email}")]
+        [Authorize]
+        public async Task<ActionResult> PutUserByAdmin(string email, [FromBody] UpdateUser commend)
+        {
+            await _userService.UpdateUserByAdminAsync(email, commend);
+            return NoContent();
+        }
+
+        // GET: api/DropUsers
         [HttpGet("DropUsers")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> DropUsers()
@@ -72,23 +84,19 @@ namespace document_server2.Controllers
             => Json(_mapper.Map<IEnumerable<UserDTO>>(await _context.Users.Where(x => x.Role_name != "droped").ToListAsync()));
 
         // PUT: api/users/dropUser/5
+        [Authorize(Policy = "AdminRole")]
         [HttpPut("dropUser/{email}")]
-        [Authorize]
         public async Task<ActionResult> DropUser(string email)
         {
             var user = await _context.Users.FindAsync(email);
 
-            if (user != null)
-            {
-                user.SetRole("dropped");
+            if (user == null) return NoContent();
 
-                _context.Update(user);
-                _context.SaveChanges();
+            user.SetRole("dropped");
+            _context.Update(user);
+            _context.SaveChanges();
 
-                return Ok();
-            }
-            else
-                return NoContent();
+            return Ok();
         }
     }
 }

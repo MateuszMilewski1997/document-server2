@@ -25,6 +25,7 @@ namespace document_server2.Infrastructure.Services.JwtToken
             {
                 new Claim(JwtRegisteredClaimNames.Sub, role),
                 new Claim(JwtRegisteredClaimNames.UniqueName, email),
+                new Claim(ClaimTypes.Role, email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString())
             };
