@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using WebApplication.Infrastructure.Extensions;
 using static document_server2.Infrastructure.Comends.CreateCase;
 
 namespace document_server2.Infrastructure.Services
@@ -48,7 +49,7 @@ namespace document_server2.Infrastructure.Services
 
             if(type == "registered")
             {
-                user = new User(data.Email, data.Login, data.Password, data.Role);
+                user = new User(data.Email, data.Login, data.Password.Hash(), data.Role);
             }
             else if(type == "unregistered")
             {
@@ -70,7 +71,7 @@ namespace document_server2.Infrastructure.Services
                 }
             }
 
-            if (user.Password != password)
+            if (user.Password != password.Hash())
             {
                 throw new Exception("Invalid credentials.");
             }
@@ -94,17 +95,49 @@ namespace document_server2.Infrastructure.Services
                 throw new Exception("Invalid credentials.");
             }
 
-            if (user.Password != data.Password)
+            if (user.Password != data.Password.Hash())
             {
                 throw new Exception("Invalid credentials.");
             }
 
-            if(data.Login != null)
+            if (data.Login != null)
+            {
                 user.SetLogin(data.Login);
+            }
             if (data.NewPassword != null)
-                user.SetPassword(data.NewPassword);
+            {
+                user.SetPassword(data.NewPassword.Hash());
+            }
             if (data.Role != null)
+            {
                 user.SetRole(data.Role);
+            }
+
+            await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task UpdateUserByAdminAsync(string email, UpdateUser data)
+        {
+            User user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("Invalid credentials.");
+            }
+
+            if (data.Login != null)
+            {
+                user.SetLogin(data.Login);
+            }
+
+            if (data.NewPassword != null)
+            {
+                user.SetPassword(data.NewPassword);
+            }
+
+            if (data.Role != null)
+            {
+                user.SetRole(data.Role);
+            }
 
             await _userRepository.UpdateAsync(user);
         }
