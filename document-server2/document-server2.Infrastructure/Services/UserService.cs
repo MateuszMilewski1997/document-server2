@@ -109,6 +109,24 @@ namespace document_server2.Infrastructure.Services
             await _userRepository.UpdateAsync(user);
         }
 
+        public async Task UpdateByAdminAsync(string email, UpdateUser data)
+        {
+            User user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("Invalid credentials.");
+            }
+
+            if (data.Login != null)
+                user.SetLogin(data.Login);
+            if (data.NewPassword != null)
+                user.SetPassword(data.NewPassword);
+            if (data.Role != null)
+                user.SetRole(data.Role);
+
+            await _userRepository.UpdateAsync(user);
+        }
+
         public async Task<CaseDetailsDTO> GetCaseAsync(int id)
             => _mapper.Map<CaseDetailsDTO>(await _userRepository.GetCaseAsync(id));
 

@@ -41,6 +41,15 @@ namespace document_server2.Controllers
             => Json(await _userService.LoginAsync(command.Identifier, command.Password));
 
         // PUT: api/users/email
+        [HttpPut("admin/{email}")]
+        [Authorize]
+        public async Task<ActionResult> PutEventAdmin(string email, [FromBody] UpdateUser commend)
+        {
+            await _userService.UpdateByAdminAsync(email, commend);
+            return NoContent();
+        }
+
+        // PUT: api/users/email
         [HttpPut("{email}")]
         [Authorize]
         public async Task<ActionResult> PutEvent(string email, [FromBody] UpdateUser commend)

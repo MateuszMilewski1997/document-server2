@@ -18,5 +18,6 @@ namespace document_server2.Infrastructure.Services
         Task AddCaseAsync(string email, CreateCase @case);
         Task UpdateCaseAsync(int id, UpdateCase data);
         Task SendEmailAsync(string sender_email, CreateCase @case);
+        Task UpdateByAdminAsync(string email, UpdateUser data);
     }
 }
