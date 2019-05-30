@@ -29,25 +29,6 @@ namespace DocumentServerTests
             Assert.Null(new_user);
         }
 
-        /*[Fact]
-        public async Task Pobranie_użytkownika_po_adresie_email_który_już_istnieje_w_bazie_danych_Zostanie_poprawnie_zwrócony()
-        {
-            // Arrange
-            DbContextOptions<DataBaseContext> options = new DbContextOptionsBuilder<DataBaseContext>()
-                      .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                      .Options;
-            DataBaseContext context = new DataBaseContext(options);
-            User user = new User("test@test.com", "tester", "secret", "registered");
-            UserRepository userRepository = new UserRepository(context);
-            // Act
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-            var new_user = await userRepository.GetByEmailAsync(user.Email);
-            // Assert
-            Assert.NotNull(new_user);
-            Assert.Equal(user, new_user);
-        }*/
-
         [Fact]
         public async Task Poprawne_dawanie_do_bazy_danych_nowego_użytkownika()
         {
