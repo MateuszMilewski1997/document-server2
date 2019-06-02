@@ -23,9 +23,9 @@ namespace document_server2.Infrastructure.Services.JwtToken
             DateTime now = DateTime.UtcNow;
             Claim[] claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, role),
+                new Claim(JwtRegisteredClaimNames.Sub, email),
                 new Claim(JwtRegisteredClaimNames.UniqueName, email),
-                new Claim(ClaimTypes.Role, email),
+                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString())
             };
