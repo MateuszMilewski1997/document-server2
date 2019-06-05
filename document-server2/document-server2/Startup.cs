@@ -86,7 +86,7 @@ namespace document_server2
                 builder =>
                 {
                     builder
-                        .WithOrigins("https://wojciechr7.github.io/document-client")
+                        .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
