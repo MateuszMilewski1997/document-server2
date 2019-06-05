@@ -2,6 +2,7 @@
 using document_server2.Infrastructure.Comends;
 using document_server2.Infrastructure.DTO;
 using document_server2.Infrastructure.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace document_server2.Controllers
 {
+    [EnableCors("Origins")]
     public class UnregisteredController : ApiControllerBase
     {
         private readonly IUserService _userService;
@@ -44,30 +46,41 @@ namespace document_server2.Controllers
 
             string key = new string(stringChars);
 
-            _cache.Set("key", $"{email}-{key}", TimeSpan.FromMinutes(180));
-            SmtpClient client = new SmtpClient();
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.EnableSsl = true;
-            client.Host = "smtp.gmail.com";
-            client.Port = 587;
+            string jakis = "";
 
-            System.Net.NetworkCredential credentials =
-                new System.Net.NetworkCredential("FakultetBillenium@gmail.com", "haslo4321");
-            client.UseDefaultCredentials = false;
-            client.Credentials = credentials;
+            try
+            {
+                _cache.Set("key", $"{email}-{key}", TimeSpan.FromMinutes(180));
+                SmtpClient client = new SmtpClient();
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                client.Host = "smtp.gmail.com";
+                client.Port = 587;
+                client.UseDefaultCredentials = true;
 
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress("FakultetBillenium@gmail.com");
+                System.Net.NetworkCredential credentials =
+                    new System.Net.NetworkCredential("FakultetBillenium@gmail.com", "haslo4321");
+                client.UseDefaultCredentials = false;
+                client.Credentials = credentials;
 
-            message.To.Add(new MailAddress(email));
+                MailMessage message = new MailMessage();
+                message.From = new MailAddress("FakultetBillenium@gmail.com");
 
-            message.Subject = "System zarządzania obiegiem dokumentów";
-            message.IsBodyHtml = true;
-            message.Body = string.Format($"<html><head></head><body><b>Twój klucz: {key}</b></body></html>");
+                message.To.Add(new MailAddress(email));
 
-            client.Send(message);
+                message.Subject = "System zarządzania obiegiem dokumentów";
+                message.IsBodyHtml = true;
+                message.Body = string.Format($"<html><head></head><body><b>Twój klucz: {key}</b></body></html>");
 
-            return Created("/unregistered/cases", null);
+                client.Send(message);
+            }
+
+            catch (Exception e)
+            {
+                jakis = e.Message;
+            }
+
+            return Created("/unregistered/cases", jakis);
         }
 
         // GET: api/unregistered/cases/email/token
